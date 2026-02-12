@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>汉字乱序生成器 - 文本防爬/趣味阅读工具</title>
+    <title>汉字乱序生成器</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -110,7 +110,7 @@
             header {
                 padding: 0 0.75rem;
             }
-            .logo span { display: none; } /* 窄屏隐藏部分文字 */
+            .logo span { display: none; } 
         }
 
         .card {
@@ -348,12 +348,12 @@
     <!-- Left: Editor -->
     <div class="card editor-container">
         <div class="card-header">
-            <h2 class="card-title">文本工作台</h2>
+            <h2 class="card-title">工作台</h2>
         </div>
 
         <div>
             <label class="field-label" for="inputText">输入原文</label>
-            <textarea id="inputText" placeholder="在此输入正常中文文本...">研究表明，汉字的顺序并不一定能影响阅读，比如当你看完这句话后，才发现这里的字全是乱的。</textarea>
+            <textarea id="inputText" placeholder="在此输入原文..."></textarea>
         </div>
 
         <div style="margin-top: 1.5rem;">
@@ -371,12 +371,12 @@
             <div class="card-header"><h3 class="card-title">配置中心</h3></div>
             
             <div class="control-group">
-                <div class="control-label"><span>乱序覆盖比例</span><span id="scrambleRateVal" class="range-value">45%</span></div>
+                <div class="control-label"><span>乱序词数比例</span><span id="scrambleRateVal" class="range-value">45%</span></div>
                 <input type="range" id="scrambleRate" min="10" max="100" value="45" oninput="updateLabels()">
             </div>
 
             <div class="control-group">
-                <div class="control-label"><span>二字交叉概率</span><span id="swapProbVal" class="range-value">70%</span></div>
+                <div class="control-label"><span>二词交叉概率</span><span id="swapProbVal" class="range-value">70%</span></div>
                 <input type="range" id="swapProb" min="0" max="100" value="70" oninput="updateLabels()">
             </div>
 
@@ -396,14 +396,6 @@
                 立即生成
             </button>
         </div>
-
-        <div class="card" style="background-color: #f8fafc; border-style: dashed;">
-            <h4 style="font-size:0.85rem; margin-bottom:8px; color: #64748b;">内置单字保护（虚词/姓氏）</h4>
-            <div class="badge-list">
-                <span class="badge">的/了/呢/吧</span>
-                <span class="badge">赵/钱/孙/李/王</span>
-            </div>
-        </div>
     </div>
 </main>
 
@@ -411,7 +403,7 @@
     <div class="intro-content">
         <h3>关于汉字乱序技术</h3>
         <p>本工具基于<strong>“研表究明”</strong>心理学效应（Typoglycemia）。在中文阅读过程中，人脑并不是逐字识别，而是以“词块”为单位进行扫描。只要词首和词尾的相对位置变化不大，或者核心词意保持完整，人脑会自动修正语序错误，从而实现流畅阅读。</p>
-        <p style="margin-top: 1rem;"><strong>技术原理：</strong>利用浏览器原生的 <code>Intl.Segmenter</code> 进行智能分词，通过概率算法随机抽取词汇进行内部打乱，或对相邻二字词执行交叉互换，从而产生具有高度欺骗性的乱序文本。常用于社交媒体防爬虫、文案排版优化及趣味交互设计。</p>
+        <p style="margin-top: 1rem;"><strong>技术原理：</strong>利用浏览器原生的 <code>Intl.Segmenter</code> 进行智能分词，通过概率算法随机抽取词汇进行内部打乱，或对相邻二字词执行交叉互换，从而产生具有欺骗性的乱序文本。</p>
     </div>
 </section>
 
