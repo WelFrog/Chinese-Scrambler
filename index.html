@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>汉字乱序生成器</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+     crossorigin="anonymous"></script>
+
     <style>
         :root {
             --primary: #4f46e5;
@@ -84,6 +88,23 @@
             border: 1px solid var(--border-color);
         }
 
+        .ad-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 1rem auto 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-wrapper ins {
+            background: rgba(0,0,0,0.03); 
+            border-radius: 8px;
+        }
+
         main {
             flex: 1;
             width: 100%;
@@ -111,6 +132,11 @@
                 padding: 0 0.75rem;
             }
             .logo span { display: none; } 
+            
+            .ad-wrapper {
+                margin: 0.5rem auto 0 auto;
+                min-height: 60px;
+            }
         }
 
         .card {
@@ -164,6 +190,65 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
+		
+		.user-avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			background-color: #e5e7eb;
+			overflow: hidden; 
+			border: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.user-avatar img {
+			width: 100%;
+			height: 100%; 
+			object-fit: cover; 
+			display: block;
+		}
+		
+		.intro-section {
+			background: #ffffff;
+			padding: 3rem 1.5rem;
+			border-top: 1px solid var(--border-color);
+		}
+
+		.intro-content {
+			max-width: 900px;
+			margin: 0 auto;
+		}
+
+		.article-block {
+			margin-bottom: 2rem;
+		}
+
+		.article-block h3 {
+			color: var(--text-main);
+			font-size: 1.25rem;
+			margin-bottom: 1rem;
+			padding-left: 10px;
+			border-left: 4px solid var(--primary);
+		}
+
+		.article-block p {
+			line-height: 1.8;
+			color: #4b5563;
+			margin-bottom: 1rem;
+			text-align: justify; /* 两端对齐，看起来更专业 */
+		}
+
+		.article-block ul {
+			padding-left: 1.2rem;
+			color: #4b5563;
+		}
+
+		.article-block li {
+			margin-bottom: 0.8rem;
+			line-height: 1.6;
+		}
 
         .output-box {
             min-height: 180px;
@@ -199,7 +284,6 @@
             cursor: pointer;
         }
 
-        /* --- Whitelist Styles --- */
         .whitelist-input-group {
             display: flex;
             gap: 8px;
@@ -282,7 +366,6 @@
             cursor: pointer;
         }
 
-        /* --- Introduction Section --- */
         .intro-section {
             background: #fff;
             padding: 2rem 1.5rem;
@@ -309,21 +392,6 @@
             padding: 1.5rem;
             text-align: center;
         }
-
-        .badge-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .badge {
-            background: #f3f4f6;
-            color: #4b5563;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-        }
     </style>
 </head>
 <body>
@@ -331,21 +399,32 @@
 <header>
     <div class="logo">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
-        <span>TextScrambler Pro</span>
+        <span>汉字乱序生成器</span>
     </div>
     <div class="header-right">
-        <a href="#" target="_blank" class="btn-outline">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-            Github
-        </a>
+        <a href="https://github.com/WelFrog/Chinese-Scrambler" target="_blank" class="btn-outline">
+			<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+			Github
+		</a>
         <div class="user-avatar">
-            <img src="" alt="" onerror="this.style.display='none'">
-        </div>
+			<img src="https://avatars.githubusercontent.com/u/137870711?s=48&v=4" alt="User Avatar">
+		</div>
     </div>
 </header>
 
+<div class="ad-wrapper">
+    <ins class="adsbygoogle"
+         style="display:block; width: 100%;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="1234567890"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
 <main>
-    <!-- Left: Editor -->
     <div class="card editor-container">
         <div class="card-header">
             <h2 class="card-title">工作台</h2>
@@ -365,7 +444,6 @@
         </div>
     </div>
 
-    <!-- Right: Config -->
     <div class="controls">
         <div class="card">
             <div class="card-header"><h3 class="card-title">配置中心</h3></div>
@@ -399,21 +477,73 @@
     </div>
 </main>
 
+<div class="ad-wrapper">
+    <ins class="adsbygoogle"
+         style="display:block; width: 100%;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="0987654321"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
 <section class="intro-section">
     <div class="intro-content">
-        <h3>关于汉字乱序技术</h3>
-        <p>本工具基于<strong>“研表究明”</strong>心理学效应（Typoglycemia）。在中文阅读过程中，人脑并不是逐字识别，而是以“词块”为单位进行扫描。只要词首和词尾的相对位置变化不大，或者核心词意保持完整，人脑会自动修正语序错误，从而实现流畅阅读。</p>
-        <p style="margin-top: 1rem;"><strong>技术原理：</strong>利用浏览器原生的 <code>Intl.Segmenter</code> 进行智能分词，通过概率算法随机抽取词汇进行内部打乱，或对相邻二字词执行交叉互换，从而产生具有欺骗性的乱序文本。</p>
+        <div class="article-block">
+            <h3>关于本工具</h3>
+			<blockquote style="border-left: 4px solid #ccc; padding-left: 1rem; color: #666; font-style: italic;">
+				有研究表明，汉字的顺序并不一定会影响阅读，比如当你看完这句话后，才发现这里的字全是乱的。
+			</blockquote>
+			<p></p>
+            <p>
+                眼动实验证明，人类在阅读文字的过程中并不是看完整的句子，而是看关键字。
+            </p>
+            <p>
+				因为对文字的熟悉和记忆，大脑“知道哪些文字代表关键信息”，当照在这些关键字上的光反射进入眼球时，大脑迅速作出识别并丢弃了不重要的信息。
+			</p>
+			<p>
+				只要词首和词尾的相对位置变化不大，或者核心词意保持完整，人脑会自动修正语序错误，从而实现流畅阅读。
+            </div>
+
+        <div class="article-block">
+            <h3>为什么选择汉字乱序工具？</h3>
+            <ul>
+                <li><strong>防爬虫与信息保护：</strong> 在社交媒体或公开论坛发布敏感内容时，通过适度乱序可以绕过简单的关键词自动抓取算法，同时不影响人类读者的理解。</li>
+                <li><strong>文案压力测试：</strong> 广告设计者和排版师可以利用本工具测试文案的“易读性”。如果乱序后依然能被快速读懂，说明文案的语义传达非常高效。</li>
+                <li><strong>教育演示：</strong> 适用于语文教学或心理学课程，向学生展示大脑处理信息的容错机制。</li>
+                <li><strong>内容防伪：</strong> 针对特定文档进行微小的序位调整，可以作为一种独特的数字水印，用于识别内容的非法转载。</li>
+            </ul>
+        </div>
+
+        <div class="article-block">
+            <h3>算法说明</h3>
+            <p>
+                本工具采用了浏览器内置的 <code>Intl.Segmenter</code> 引擎进行分词，能够精准识别现代汉语中的多字词组。
+			</p>
+			<p>
+                工具支持自定义<strong>“白名单”</strong>功能，确保部分专有名词不会被乱序，
+                从而在保持乱序的同时，最大限度保留文本的核心逻辑结构。
+            </p>
+			<p>
+				本工具以于 Github 开源，你可以点击顶部的 Github 按钮来查看该开源项目的详细内容。
+			</p>
+            <p style="font-size: 0.8rem; color: #999;">
+                注：本工具仅供技术交流与学术研究使用，请勿用于法律法规的内容处理。
+            </p>
+        </div>
     </div>
 </section>
 
 <footer>
     <div class="footer-content" style="font-size: 0.85rem; color: var(--text-sub);">
-        <p>&copy; 2023 TextScrambler Pro · 体验汉字排版的独特魅力</p>
+        <p>&copy; Chinese Scrambler · 汉字乱序生成器 · Made by WelFrog</p>
     </div>
 </footer>
 
 <script>
+    // ... 原有的 JavaScript 代码，未做修改 ...
     const BLACKLIST_CHARS = new Set([
         '的', '了', '呢', '吧', '吗', '啊', '呀', '哇', '着', '过', '也', '还', '就', '都',
         '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨',
@@ -554,7 +684,6 @@
         });
     }
 
-    // 布局适配简单检测（如果是手机端调小默认行高）
     if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
         document.body.style.fontSize = "15px";
     }
