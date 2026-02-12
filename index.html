@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>汉字乱序生成器 - 文本防爬/趣味阅读工具</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-sub: #6b7280;
+            --border-color: #e5e7eb;
+            --header-height: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--card-bg);
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-outline {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* 手机端布局调整 */
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+                margin: 0.5rem auto;
+            }
+            .editor-container {
+                order: 1;
+            }
+            .controls {
+                order: 2;
+            }
+            header {
+                padding: 0 0.75rem;
+            }
+            .logo span { display: none; } /* 窄屏隐藏部分文字 */
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .field-label-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .field-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            background-color: #fafafa;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .output-box {
+            min-height: 180px;
+            padding: 0.85rem;
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #1f2937;
+            word-break: break-all;
+        }
+
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .control-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .range-value { color: var(--primary); font-family: monospace; }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* --- Whitelist Styles --- */
+        .whitelist-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .input-small {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .whitelist-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .tag {
+            background: #eef2ff;
+            color: var(--primary);
+            border: 1px solid #c7d2fe;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 2px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-copy-action {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* --- Introduction Section --- */
+        .intro-section {
+            background: #fff;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 1rem;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #4b5563;
+        }
+
+        .intro-content h3 {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        footer {
+            background: #f9fafb;
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+        <span>TextScrambler Pro</span>
+    </div>
+    <div class="header-right">
+        <a href="#" target="_blank" class="btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            Github
+        </a>
+        <div class="user-avatar">
+            <img src="" alt="" onerror="this.style.display='none'">
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- Left: Editor -->
+    <div class="card editor-container">
+        <div class="card-header">
+            <h2 class="card-title">文本工作台</h2>
+        </div>
+
+        <div>
+            <label class="field-label" for="inputText">输入原文</label>
+            <textarea id="inputText" placeholder="在此输入正常中文文本...">研究表明，汉字的顺序并不一定能影响阅读，比如当你看完这句话后，才发现这里的字全是乱的。</textarea>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+            <div class="field-label-wrapper">
+                <label class="field-label">处理结果</label>
+                <button class="btn-copy-action" id="copyBtn" onclick="copyResult()">复制</button>
+            </div>
+            <div id="result" class="output-box">等待生成...</div>
+        </div>
+    </div>
+
+    <!-- Right: Config -->
+    <div class="controls">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">配置中心</h3></div>
+            
+            <div class="control-group">
+                <div class="control-label"><span>乱序覆盖比例</span><span id="scrambleRateVal" class="range-value">45%</span></div>
+                <input type="range" id="scrambleRate" min="10" max="100" value="45" oninput="updateLabels()">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label"><span>二字交叉概率</span><span id="swapProbVal" class="range-value">70%</span></div>
+                <input type="range" id="swapProb" min="0" max="100" value="70" oninput="updateLabels()">
+            </div>
+
+            <div class="control-group">
+                <label class="field-label" style="font-size:0.85rem;">自定义白名单</label>
+                <div class="whitelist-input-group">
+                    <input type="text" id="whitelistInput" class="input-small" placeholder="关键词或短句..." onkeydown="if(event.key==='Enter') addWhitelistTag()">
+                    <button class="btn-add" onclick="addWhitelistTag()">添加</button>
+                </div>
+                <div id="whitelistTags" class="whitelist-tags">
+                    <div style="color:var(--text-sub); font-size: 0.75rem; width: 100%; text-align: center; padding: 10px;">暂无白名单</div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="processText()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                立即生成
+            </button>
+        </div>
+
+        <div class="card" style="background-color: #f8fafc; border-style: dashed;">
+            <h4 style="font-size:0.85rem; margin-bottom:8px; color: #64748b;">内置单字保护（虚词/姓氏）</h4>
+            <div class="badge-list">
+                <span class="badge">的/了/呢/吧</span>
+                <span class="badge">赵/钱/孙/李/王</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<section class="intro-section">
+    <div class="intro-content">
+        <h3>关于汉字乱序技术</h3>
+        <p>本工具基于<strong>“研表究明”</strong>心理学效应（Typoglycemia）。在中文阅读过程中，人脑并不是逐字识别，而是以“词块”为单位进行扫描。只要词首和词尾的相对位置变化不大，或者核心词意保持完整，人脑会自动修正语序错误，从而实现流畅阅读。</p>
+        <p style="margin-top: 1rem;"><strong>技术原理：</strong>利用浏览器原生的 <code>Intl.Segmenter</code> 进行智能分词，通过概率算法随机抽取词汇进行内部打乱，或对相邻二字词执行交叉互换，从而产生具有高度欺骗性的乱序文本。常用于社交媒体防爬虫、文案排版优化及趣味交互设计。</p>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content" style="font-size: 0.85rem; color: var(--text-sub);">
+        <p>&copy; 2023 TextScrambler Pro · 体验汉字排版的独特魅力</p>
+    </div>
+</footer>
+
+<script>
+    const BLACKLIST_CHARS = new Set([
+        '的', '了', '呢', '吧', '吗', '啊', '呀', '哇', '着', '过', '也', '还', '就', '都',
+        '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨',
+        '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜'
+    ]);
+
+    let userWhitelist = [];
+    const segmenter = new Intl.Segmenter('zh-CN', { granularity: 'word' });
+
+    function updateLabels() {
+        document.getElementById('scrambleRateVal').innerText = document.getElementById('scrambleRate').value + '%';
+        document.getElementById('swapProbVal').innerText = document.getElementById('swapProb').value + '%';
+    }
+
+    function addWhitelistTag() {
+        const input = document.getElementById('whitelistInput');
+        const value = input.value.trim();
+        if (value && !userWhitelist.includes(value)) {
+            userWhitelist.push(value);
+            renderTags();
+            input.value = '';
+        }
+    }
+
+    function removeTag(index) {
+        userWhitelist.splice(index, 1);
+        renderTags();
+    }
+
+    function renderTags() {
+        const container = document.getElementById('whitelistTags');
+        if (userWhitelist.length === 0) {
+            container.innerHTML = `<div style="color:var(--text-sub); font-size: 0.75rem; width: 100%; text-align: center; padding: 10px;">暂无白名单</div>`;
+            return;
+        }
+        container.innerHTML = userWhitelist.map((item, index) => `
+            <div class="tag">
+                ${item}
+                <span class="tag-remove" onclick="removeTag(${index})">&times;</span>
+            </div>
+        `).join('');
+    }
+
+    function processText() {
+        const input = document.getElementById('inputText').value;
+        const resultDiv = document.getElementById('result');
+        const scrambleRate = parseInt(document.getElementById('scrambleRate').value) / 100;
+        const swapProb = parseInt(document.getElementById('swapProb').value) / 100;
+
+        if (!input.trim()) { resultDiv.innerText = "请输入内容。"; return; }
+
+        const sentences = input.match(/[^。！？；\n]+[。！？；\n]?/g) || [input];
+        let finalOutput = "";
+        sentences.forEach(sentence => {
+            finalOutput += scrambleSentence(sentence, scrambleRate, swapProb, userWhitelist);
+        });
+        resultDiv.innerText = finalOutput;
+    }
+
+    function scrambleSentence(sentence, rate, swapProb, whitelist) {
+        const protectedIntervals = [];
+        whitelist.forEach(phrase => {
+            let startPos = 0;
+            while ((startPos = sentence.indexOf(phrase, startPos)) !== -1) {
+                protectedIntervals.push({ start: startPos, end: startPos + phrase.length });
+                startPos += phrase.length;
+            }
+        });
+
+        const segments = Array.from(segmenter.segment(sentence));
+        let wordIndices = [];
+        let wordObjects = segments.map((seg) => {
+            const isInsideWhitelist = protectedIntervals.some(interval => (seg.index >= interval.start && seg.index < interval.end));
+            const hasBlacklistChar = Array.from(seg.segment).some(char => BLACKLIST_CHARS.has(char));
+            return {
+                text: seg.segment,
+                isWordLike: seg.isWordLike,
+                isProtected: isInsideWhitelist || hasBlacklistChar,
+                shouldScramble: false
+            };
+        });
+
+        wordObjects.forEach((obj, idx) => {
+            if (obj.isWordLike && !obj.isProtected && obj.text.length >= 1) wordIndices.push(idx);
+        });
+
+        const targetCount = Math.ceil(wordIndices.length * rate);
+        shuffleArray(wordIndices);
+        const scrambleSet = new Set(wordIndices.slice(0, targetCount));
+
+        wordObjects.forEach((obj, idx) => { if (scrambleSet.has(idx)) obj.shouldScramble = true; });
+
+        let processedText = [];
+        let skipNext = false;
+
+        for (let i = 0; i < wordObjects.length; i++) {
+            if (skipNext) { skipNext = false; continue; }
+            let curr = wordObjects[i];
+            let next = wordObjects[i+1];
+
+            if (curr.shouldScramble && next && next.shouldScramble && curr.text.length === 2 && next.text.length === 2) {
+                if (Math.random() < swapProb) {
+                    processedText.push(curr.text[0] + next.text[0]);
+                    processedText.push(curr.text[1] + next.text[1]);
+                    skipNext = true; 
+                    continue;
+                }
+            }
+            processedText.push(curr.shouldScramble ? scrambleSingleWord(curr.text) : curr.text);
+        }
+        return processedText.join("");
+    }
+
+    function scrambleSingleWord(text) {
+        if (text.length < 2) return text;
+        let chars = text.split('');
+        if (text.length === 2) return chars.reverse().join('');
+        shuffleArray(chars);
+        if (chars.join('') === text) [chars[0], chars[1]] = [chars[1], chars[0]];
+        return chars.join('');
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function copyResult() {
+        const text = document.getElementById('result').innerText;
+        const btn = document.getElementById('copyBtn');
+        if (text === "等待生成..." || !text.trim()) return;
+        navigator.clipboard.writeText(text).then(() => {
+            const old = btn.innerText;
+            btn.innerText = '成功!';
+            setTimeout(() => btn.innerText = old, 1500);
+        });
+    }
+
+    // 布局适配简单检测（如果是手机端调小默认行高）
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        document.body.style.fontSize = "15px";
+    }
+
+    updateLabels();
+</script>
+</body>
+</html>
