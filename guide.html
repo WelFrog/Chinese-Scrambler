@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原理深度解析 - 汉字乱序生成器</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-sub: #4b5563;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;
+            margin: 0;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .breadcrumb { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        h1 { font-size: 2.25rem; color: var(--text-main); margin-bottom: 1.5rem; line-height: 1.2; }
+        h2 { font-size: 1.5rem; color: var(--primary); margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.2rem; margin-top: 1.5rem; color: var(--text-main); }
+        p { margin-bottom: 1.5rem; text-align: justify; }
+        .highlight-box { background: #f9fafb; border-left: 5px solid var(--primary); padding: 1.5rem; margin: 2rem 0; font-style: italic; color: #374151; }
+        .math-concept { background: #eef2ff; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: var(--primary); }
+        footer { text-align: center; margin-top: 3rem; font-size: 0.85rem; color: var(--text-sub); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="index.html">首页</a> / 深度原理分析
+        </nav>
+
+        <h1>汉字乱序与人类认知：为什么我们能读懂“乱码”？</h1>
+        
+        <p>您可能在社交网络上见过这样一段话：“研表究明，汉字的序顺并不定一能影阅响读。”即便这句话中存在多处明显的语序错误，大多数成年读者依然能够毫无障碍地理解其含义。这种有趣的现象背后，涉及到了认知心理学、语言学以及神经科学的复杂协作。</p>
+
+        <div class="highlight-box">
+            “阅读并不是一个逐字扫描的过程，而是一个基于期望驱动的‘整体表征’匹配过程。”
+        </div>
+
+        <h2>一、 整体性加工理论 (Holistic Processing)</h2>
+        <p>在认知心理学中，我们对熟知事物的识别往往是“整体性”的。对于长期接触汉字的母语者来说，一个常用的二字词或三字词（如“研究”、“产生”）在脑海中已经形成了一个固定的<strong>视觉块 (Chunk)</strong>。</p>
+        <p>当眼睛扫描过文本时，大脑并不会像计算机程序那样逐一解析字符的物理位置，而是通过词首和词尾的“特征锚点”快速激活语义。只要核心字符没有缺失，大脑会自动调取记忆中的正确词条进行补全。</p>
+
+        <h2>二、 自动修正机制与语境预测</h2>
+        <p>阅读是一种高级的认知预测活动。大脑会根据前文提供的语义环境，对即将出现的词汇产生“自上而下”的预期（Top-down processing）。</p>
+        <ul>
+            <li><strong>语境补偿：</strong> 如果前文提到了“实验室”，那么当后面出现“研表究明”时，大脑会强制将其纠正为“研究表明”。</li>
+            <li><strong>容错能力：</strong> 这种机制确保了我们在阅读手写体文字、污损文本或印刷错误时的流畅度，是人类进化出的高效信息处理策略。</li>
+        </ul>
+
+        
+
+        <h2>三、 算法实现：基于 Intl.Segmenter 的分词逻辑</h2>
+        <p>本工具并非简单地对所有字符进行随机打乱，因为完全随机的字符堆砌（如“明研表究”）会极大增加认知负荷。为了模拟真实场景中的“易读乱序”，我们采用了以下算法策略：</p>
+        <h3>1. 语义单元保护</h3>
+        <p>利用现代浏览器的 <span class="math-concept">Intl.Segmenter</span> 接口进行中文分词。该接口能识别词语边界，确保乱序是以“词”为单位，而不是破坏汉字本身的结构。</p>
+        <h3>2. 局部序位交换 (Transposed Letter Effect)</h3>
+        <p>研究表明，相邻位置的交换（如 AB → BA）对阅读的影响最小。本工具通过设置“二词交叉概率”，优先处理相邻词组的换位，从而达到既能避开机器检测，又不影响人类理解的平衡点。</p>
+
+        <h2>四、 应用领域与社会价值</h2>
+        <p>除了娱乐性质外，汉字乱序技术在多个领域具有研究价值：</p>
+        <p><strong>1. 网络信息安全：</strong> 面对日益严格的自动化内容抓取，适度的乱序可以作为一种低成本的内容脱敏手段。</p>
+        <p><strong>2. 认知障碍筛查：</strong> 通过测试个体对乱序文本的还原速度，可以辅助评估早期读写困难或大脑功能退化。</p>
+        <p><strong>3. 广告心理学：</strong> 测试品牌关键词在不同乱序程度下的辨识度，评估文案的视觉穿透力。</p>
+
+        <h2>结语</h2>
+        <p>汉字乱序生成器不仅仅是一个好玩的工具，它是对人类大脑非凡容错能力的一次致敬。通过技术手段探索语言的边界，我们能更深刻地理解我们习以为常的阅读行为背后，隐藏着多么精密的神经协作。</p>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+        
+        <div style="text-align: center;">
+            <a href="index.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">返回工作台 立即体验</a>
+        </div>
+
+        <footer>
+            &copy; 2026 welfrog.github.io · 汉字乱序实验室
+        </footer>
+    </div>
+</body>
+</html>
